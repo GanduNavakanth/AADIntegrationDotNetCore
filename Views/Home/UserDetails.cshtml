@@ -1,0 +1,131 @@
+﻿@using Microsoft.AspNetCore.Identity;
+@using System.Security.Claims;
+@model IEnumerable<Claim>
+
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+<body>
+
+
+    <br />
+    <div class="alert alert-danger">
+        This is UserDetails Page . User shoul be part of Group:<strong>"AD_POC_Admin" </strong> to Access this page .
+    </div>
+    <br />
+    <div class="card">
+        <div class="card-header bg-primary">
+
+            <p class="text-white">   UserIdentityName:<strong>@User.Identity.Name</strong>.</p>
+        </div>
+        <div class="card-body">
+
+
+
+
+            @if (Model.Any())
+            {
+
+                <div class="card ">
+                    <div class="card-header bg-info">
+                        Basic Info
+                    </div>
+                    <div class="card-body">
+                        <ul>
+                            <li> <p class="text-danger">User Name:<strong> @Model.FirstOrDefault(claim => claim.Type.ToLower() == "name").Value</strong></p></li>
+                            <li>User NameIdentifier: @Model.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier).Value</li>
+                            <li>User ID/User ObjectID in the Current Tenant: @Model.FirstOrDefault(claim => claim.Type.ToLower().Contains("claims/objectidentifier")).Value</li>
+                            <li>User's Azure Tenant ID: @Model.FirstOrDefault(claim => claim.Type.ToLower().Contains("identity/claims/tenantid")).Value</li>
+                        </ul>
+                    </div>
+                    <div class="card-footer">
+
+                    </div>
+
+                </div>
+
+                <br />
+
+
+
+                <div class="card ">
+                    <div class="card-header bg-success">
+                        User's Roles/Groups(Groups Configured for this Application):
+                    </div>
+                    <div class="card-body">
+                        <ul>
+                            @************************************** Loop Through Groups/Roles ********************************@
+                            @foreach (var claim in Model.Where(claim => claim.Type == ClaimTypes.Role))
+                            {
+
+                                <li>
+                                    Role/Group Name : @claim.Value
+                                </li>
+
+
+                            }
+
+
+                        </ul>
+                    </div>
+                    <div class="card-footer">
+
+                    </div>
+
+                </div>
+                <br />
+
+                <div class="card ">
+                    <div class="card-header bg-warning">
+                        All Claims:
+                    </div>
+                    <div class="card-body">
+                        <ul>
+
+                            @*************************** Loop Through All claims*********** *********************@
+
+                            @foreach (var claim in Model)
+                            {
+                                <li>
+                                    Calim Type : @claim.Type
+                                </li>
+                                <li>
+                                    Calim Value : @claim.Value
+                                </li>
+
+
+                            }
+
+                        </ul>
+                    </div>
+                    <div class="card-footer">
+
+                    </div>
+
+                    <br />
+
+                    <div class="card-footer">
+
+                    </div>
+                </div>
+
+            }
+            else
+            {
+                <div class="card bg-danger">
+                    <div class="card-header">
+                        No roles Assigned yet
+                    </div>
+
+                </div>
+            }
+        </div>
+    </div>
+</body>
+</html>
