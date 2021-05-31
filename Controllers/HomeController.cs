@@ -46,5 +46,11 @@ namespace SampleAADDotnetCore.Controllers
             var claims = User.Claims;
             return View(claims);
         }
+        
+        public IActionResult ClaimsModuleA()
+        {
+            var claims = User.Claims;
+            return View(claims);
+        }
     }
 }
