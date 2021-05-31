@@ -50,8 +50,29 @@ namespace SampleAADDotnetCore
             });
 
             services.Configure<CookieAuthenticationOptions>(AzureADDefaults.CookieScheme, options => options.AccessDeniedPath = "/accessdenied");
+
+            #region Define Authorization Policies
+
+            //Define the Authorization Policies which can be used for in MVC Controllers for PolicyBased Authorization functionality
+
+            services.AddAuthorization(options => {
+                options.AddPolicy("AdminModuleAPolicy", p => p.RequireRole("AD_POC_ModuleA"));  // Policy based on Role
+                options.AddPolicy("AdminModuleC_Policy", p => p.RequireRole("AD_POC_ModuleC"));
+                options.AddPolicy("AdminModuleA_ClaimsPolicy", p => p.RequireClaim(ClaimTypes.Role, "AD_POC_ModuleA")); //Policy based on User Claims
+                options.AddPolicy("AdminModuleC_ClaimsPolicy", p => p.RequireClaim(ClaimTypes.Role, "AD_POC_ModuleC")); //Policy based on User Claims
+
+                //Below is the Custom Authorzation Policy Where we can mention multiple Conditions
+                options.AddPolicy("AccessToAllAzureAdminGroups", p => p.AddRequirements(new CustomAuthorizationPolicies.AllAdminsAccessRequirement() ));
+
+            });
+
+
+            #endregion
             services.AddControllersWithViews();
             services.AddRazorPages();
+
+            //Register Custom authorization Handler
+            services.AddSingleton<IAuthorizationHandler, CustomAuthorizationPolicies.AllAdminsAccessAuthHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
