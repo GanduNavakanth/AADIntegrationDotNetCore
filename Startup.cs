@@ -56,9 +56,11 @@ namespace SampleAADDotnetCore
             //Define the Authorization Policies which can be used for in MVC Controllers for PolicyBased Authorization functionality
 
             services.AddAuthorization(options => {
-                options.AddPolicy("AdminModuleAPolicy", p => p.RequireRole("AD_POC_ModuleA"));  // Policy based on Role
+                options.AddPolicy("AdminModuleA_Policy", p => p.RequireRole("AD_POC_ModuleA"));
+                options.AddPolicy("AdminModuleB_Policy", p => p.RequireRole("AD_POC_ModuleB"));// Policy based on Role
                 options.AddPolicy("AdminModuleC_Policy", p => p.RequireRole("AD_POC_ModuleC"));
-                options.AddPolicy("AdminModuleA_ClaimsPolicy", p => p.RequireClaim(ClaimTypes.Role, "AD_POC_ModuleA")); //Policy based on User Claims
+                options.AddPolicy("AdminModuleA_ClaimsPolicy", p => p.RequireClaim(ClaimTypes.Role, "AD_POC_ModuleA"));
+                options.AddPolicy("AdminModuleB_ClaimsPolicy", p => p.RequireClaim(ClaimTypes.Role, "AD_POC_ModuleB"));//Policy based on User Claims
                 options.AddPolicy("AdminModuleC_ClaimsPolicy", p => p.RequireClaim(ClaimTypes.Role, "AD_POC_ModuleC")); //Policy based on User Claims
 
                 //Below is the Custom Authorzation Policy Where we can mention multiple Conditions
@@ -111,7 +113,7 @@ namespace SampleAADDotnetCore
                 });
                 endpoints.MapControllerRoute(
                    name: "default",
-                   pattern: "{controller=Home}/{action=UserDetails}/{id?}");
+                   pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
         }
