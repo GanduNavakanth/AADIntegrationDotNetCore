@@ -74,7 +74,7 @@ namespace SampleAADDotnetCore.Controllers
             //Note : This method uses the Custom Authorization Policy thorugh the Authorization Handler .net core concpet
             // In this Hanlder we can  mention multiple conditions to Authorize user. Refer Class -AllAdminsAccessAuthHandler.cs for details
 
-            return Content("This Endpoint uses the Custom Authorization Policy thorugh the Authorization Handler . Users should  belongs to either of AD_POC_Admin or AD_POC_ModuleA or AD_POC_ModuleB or AD_POC_ModuleC Groups");
+            return Content("Success!This Endpoint uses the Custom Authorization Policy thorugh the Authorization Handler . Users should  belongs to either of AD_POC_Admin or AD_POC_ModuleA or AD_POC_ModuleB or AD_POC_ModuleC Groups");
         }
 
 
