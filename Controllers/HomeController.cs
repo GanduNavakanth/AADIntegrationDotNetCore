@@ -1,20 +1,35 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using System.Threading.Tasks;
+using Microsoft.Identity;
+using System.Linq;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 
 namespace SampleAADDotnetCore.Controllers
 {
     public class HomeController : Controller
     {
 
-
+        [HttpPost]
+        public IActionResult Logout()
+        {
+            var login = HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            foreach (var cookie in Request.Cookies.Keys)
+            {
+                Response.Cookies.Delete(cookie);
+            }
+            return RedirectToAction("Logoutpage");
+        }
         [Authorize]
         public IActionResult Index()
+        {
+            return View();
+        }
+        public IActionResult Logoutpage()
         {
             return View();
         }
@@ -76,8 +91,6 @@ namespace SampleAADDotnetCore.Controllers
 
             return Content("Success!This Endpoint uses the Custom Authorization Policy thorugh the Authorization Handler . Users should  belongs to either of AD_POC_Admin or AD_POC_ModuleA or AD_POC_ModuleB or AD_POC_ModuleC Groups");
         }
-
-
-
+       
     }
 }

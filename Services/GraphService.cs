@@ -33,9 +33,9 @@ namespace SampleAADDotnetCore.Services
 
             GraphServiceClient graphClient = new GraphServiceClient(
                 "https://graph.microsoft.com/v1.0",
-                new DelegateAuthenticationProvider(async (requestMessage) =>
-                {
+                new DelegateAuthenticationProvider((requestMessage) => {
                     requestMessage.Headers.Authorization = new AuthenticationHeaderValue("bearer", authResult.AccessToken);
+                    return Task.CompletedTask;
                 }));
 
             return new GraphService(graphClient);

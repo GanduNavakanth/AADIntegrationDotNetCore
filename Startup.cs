@@ -13,6 +13,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Identity;
 
 namespace SampleAADDotnetCore
 {
@@ -30,6 +33,7 @@ namespace SampleAADDotnetCore
         {
             services.AddAuthentication(AzureADDefaults.AuthenticationScheme)
                    .AddAzureAD(options => Configuration.Bind("AzureAD", options));
+
             services.Configure<OpenIdConnectOptions>(AzureADDefaults.OpenIdScheme, options =>
             {
                 options.Events = new OpenIdConnectEvents
@@ -48,6 +52,7 @@ namespace SampleAADDotnetCore
                     }
                 };
             });
+           
 
             services.Configure<CookieAuthenticationOptions>(AzureADDefaults.CookieScheme, options => options.AccessDeniedPath = "/accessdenied");
 
@@ -85,7 +90,7 @@ namespace SampleAADDotnetCore
             {
                 app.UseDeveloperExceptionPage();
             }
-
+            
             app.UseRouting();
 
             app.UseAuthentication();

@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -34,7 +35,15 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="ModuleC">ModuleC</a>
                         </li>
+
                     </ul>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <form asp-controller="Home" asp-action="Logout">
+                            <button type="submit" name="signOutType" value="all">Sign Out</button>
+
+                        </form>
+                    }
                 </div>
             </div>
         </nav>
