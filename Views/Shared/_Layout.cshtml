@@ -1,4 +1,4 @@
-﻿
+﻿@using Microsoft.Identity.Web
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -35,15 +35,17 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="ModuleC">ModuleC</a>
                         </li>
-
                     </ul>
-                    @if (User.Identity.IsAuthenticated)
-                    {
-                        <form asp-controller="Home" asp-action="Logout">
-                            <button type="submit" name="signOutType" value="all">Sign Out</button>
 
-                        </form>
-                    }
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            <form asp-controller="Home" asp-action="Logout">
+                                    <button type="submit" name="signOutType" value="all">Sign Out</button>
+
+                                </form>
+                            @*<li class="navbar-text"><a class="nav-link" asp-area="MicrosoftIdentity" asp-controller="Account" asp-action="SignOut">Sign out</a></li>*@
+                        }
+                    
                 </div>
             </div>
         </nav>

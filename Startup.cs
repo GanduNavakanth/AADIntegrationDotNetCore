@@ -16,6 +16,10 @@ using Microsoft.Extensions.Hosting;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Options;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Session;
+using Microsoft.Extensions.Caching.Memory;
+using System;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 
 namespace SampleAADDotnetCore
 {
@@ -33,7 +37,8 @@ namespace SampleAADDotnetCore
         {
             services.AddAuthentication(AzureADDefaults.AuthenticationScheme)
                    .AddAzureAD(options => Configuration.Bind("AzureAD", options));
-
+            
+           
             services.Configure<OpenIdConnectOptions>(AzureADDefaults.OpenIdScheme, options =>
             {
                 options.Events = new OpenIdConnectEvents
@@ -51,10 +56,23 @@ namespace SampleAADDotnetCore
                         ctx.Principal.AddIdentity(appIdentity);
                     }
                 };
-            });
-           
 
-            services.Configure<CookieAuthenticationOptions>(AzureADDefaults.CookieScheme, options => options.AccessDeniedPath = "/accessdenied");
+            });
+
+            //services.AddOptions<OpenIdConnectOptions>(openIdConnectScheme)
+            //     .Configure<IServiceProvider>((options, serviceProvider) =>
+            //     {
+            //         options.ResponseType = OpenIdConnectResponseType.CodeIdToken;
+            //         var signOutHandler = options.Events.OnRedirectToIdentityProviderForSignOut;
+            //         options.Events.OnRedirectToIdentityProviderForSignOut = async context =>
+            //         {
+            //             // Remove the account from MSAL.NET token cache
+            //             var tokenAcquisition = context.HttpContext.RequestServices.GetRequiredService<ITokenAcquisitionInternal>();
+            //             await tokenAcquisition.RemoveAccountAsync(context).ConfigureAwait(false);
+            //             await signOutHandler(context).ConfigureAwait(false);
+            //         };
+            //     });
+                     services.Configure<CookieAuthenticationOptions>(AzureADDefaults.CookieScheme, options => options.AccessDeniedPath = "/Home/Error");
 
             #region Define Authorization Policies
 
@@ -73,6 +91,7 @@ namespace SampleAADDotnetCore
 
             });
 
+            
 
             #endregion
             services.AddControllersWithViews();
@@ -86,6 +105,8 @@ namespace SampleAADDotnetCore
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -112,10 +133,14 @@ namespace SampleAADDotnetCore
 
                 
                 */
-                endpoints.MapGet("/accessdenied", async context =>
-                {
-                    await context.Response.WriteAsync("Access denied!! Ensure you are part of requried Azure AD Group ");
-                });
+                //endpoints.MapGet("/accessdenied", async context =>
+                //{
+                //    await context.Response.WriteAsync("Access denied!! Ensure you are part of requried Azure AD Group ");
+
+                //});
+
+
+
                 endpoints.MapControllerRoute(
                    name: "default",
                    pattern: "{controller=Home}/{action=Index}/{id?}");
